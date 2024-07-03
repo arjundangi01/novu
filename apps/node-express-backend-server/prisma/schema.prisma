@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DB_URL")
 }
 
@@ -10,7 +10,7 @@ generator client {
 model Company {
   address   String?
   createdAt DateTime @default(now())
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String?
   updatedAt DateTime @updatedAt
   users     User[]
@@ -18,11 +18,11 @@ model Company {
 
 model User {
   company   Company? @relation(fields: [companyId], references: [id])
-  companyId String?
+  companyId String?  @db.ObjectId
   createdAt DateTime @default(now())
   email     String?  @unique
   firstName String?
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   lastName  String?
   password  String
   roles     Json
